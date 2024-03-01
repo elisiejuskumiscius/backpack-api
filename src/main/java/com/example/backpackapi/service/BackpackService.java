@@ -4,10 +4,11 @@ import com.example.backpackapi.model.Backpack;
 import com.example.backpackapi.model.BackpackData;
 import com.example.backpackapi.model.Response;
 import com.example.backpackapi.repository.BackPackRepository;
+import com.example.backpackapi.validator.BackpackValidator;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,7 +19,8 @@ public class BackpackService {
     @Resource
     private BackPackRepository backPackRepository;
 
-    public Response getBackpack(int kilometers, LocalDateTime hikeDate) {
+    public Response getBackpack(int kilometers, String hikeDate) {
+        BackpackValidator.validateRequest(kilometers, hikeDate);
         var season = calculateSeason(hikeDate);
         var itemsByKilometersAndSeason = backPackRepository.getByKilometersLessThanEqualAndSeasonContaining(kilometers, season);
         var itemsWithoutDuplicates = removeDuplicates(itemsByKilometersAndSeason);
@@ -26,8 +28,10 @@ public class BackpackService {
         return new Response(mapResponse(itemsWithoutDuplicates));
     }
 
-    private String calculateSeason(LocalDateTime dateTime) {
-        Month month = dateTime.getMonth();
+    private String calculateSeason(String dateString) {
+        LocalDate date = LocalDate.parse(dateString);
+
+        Month month = date.getMonth();
         return switch (month) {
             case DECEMBER, JANUARY, FEBRUARY -> "Winter";
             case MARCH, APRIL, MAY -> "Spring";
