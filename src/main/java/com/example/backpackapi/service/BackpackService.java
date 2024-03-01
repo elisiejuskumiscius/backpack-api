@@ -40,7 +40,6 @@ public class BackpackService {
         };
     }
 
-
     private List<BackpackData> removeDuplicates(List<BackpackData> backpackDataList) {
         Map<String, List<BackpackData>> maxKilometersMap = new HashMap<>();
 
