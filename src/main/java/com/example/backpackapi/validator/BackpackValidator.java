@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 public class BackpackValidator {
 
     public static void validateRequest(int kilometers, String date) {
+
         if (kilometers < 1 || kilometers > 100) {
             throw new RequestException(String.format("Entered invalid kilometers value %s", kilometers));
         }
