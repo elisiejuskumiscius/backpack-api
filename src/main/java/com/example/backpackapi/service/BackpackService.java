@@ -1,11 +1,12 @@
 package com.example.backpackapi.service;
 
-import com.example.backpackapi.model.Backpack;
+import com.example.backpackapi.model.Item;
 import com.example.backpackapi.model.BackpackData;
-import com.example.backpackapi.model.Response;
+import com.example.backpackapi.model.Backpack;
 import com.example.backpackapi.repository.BackPackRepository;
 import com.example.backpackapi.validator.BackpackValidator;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,16 +17,16 @@ import java.util.stream.Collectors;
 @Service
 public class BackpackService {
 
-    @Resource
+    @Autowired
     private BackPackRepository backPackRepository;
 
-    public Response getBackpack(int kilometers, String hikeDate) {
+    public Backpack getBackpack(int kilometers, String hikeDate) {
         BackpackValidator.validateRequest(kilometers, hikeDate);
         var season = calculateSeason(hikeDate);
         var itemsByKilometersAndSeason = backPackRepository.getByKilometersLessThanEqualAndSeasonContaining(kilometers, season);
         var itemsWithoutDuplicates = removeDuplicates(itemsByKilometersAndSeason);
 
-        return new Response(mapResponse(itemsWithoutDuplicates));
+        return new Backpack(mapResponse(itemsWithoutDuplicates));
     }
 
     private String calculateSeason(String dateString) {
@@ -40,7 +41,7 @@ public class BackpackService {
         };
     }
 
-    private List<BackpackData> removeDuplicates(List<BackpackData> backpackDataList) {
+    static List<BackpackData> removeDuplicates(List<BackpackData> backpackDataList) {
         Map<String, List<BackpackData>> maxKilometersMap = new HashMap<>();
 
         for (BackpackData data : backpackDataList) {
@@ -64,14 +65,14 @@ public class BackpackService {
         return resultList;
     }
 
-    private List<Backpack> mapResponse(List<BackpackData> list) {
+    private List<Item> mapResponse(List<BackpackData> list) {
         return list.stream()
                 .map(this::mapToBackpack)
                 .collect(Collectors.toList());
     }
 
-    private Backpack mapToBackpack(BackpackData backpackData) {
-        return new Backpack(backpackData.getName(), backpackData.getQuantity());
+    private Item mapToBackpack(BackpackData backpackData) {
+        return new Item(backpackData.getName(), backpackData.getQuantity());
     }
 }
 
