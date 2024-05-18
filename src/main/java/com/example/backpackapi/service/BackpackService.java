@@ -1,12 +1,11 @@
 package com.example.backpackapi.service;
 
+import com.example.backpackapi.model.Backpack;
 import com.example.backpackapi.model.Item;
 import com.example.backpackapi.model.BackpackData;
-import com.example.backpackapi.model.Backpack;
 import com.example.backpackapi.repository.BackPackRepository;
 import com.example.backpackapi.validator.BackpackValidator;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 @Service
 public class BackpackService {
 
-    @Autowired
+    @Resource
     private BackPackRepository backPackRepository;
 
     public Backpack getBackpack(int kilometers, String hikeDate) {
@@ -26,10 +25,12 @@ public class BackpackService {
         var itemsByKilometersAndSeason = backPackRepository.getByKilometersLessThanEqualAndSeasonContaining(kilometers, season);
         var itemsWithoutDuplicates = removeDuplicates(itemsByKilometersAndSeason);
 
-        return new Backpack(mapResponse(itemsWithoutDuplicates));
+        Backpack response = new Backpack();
+        response.setItems(mapResponse(itemsWithoutDuplicates));
+        return response;
     }
 
-    private String calculateSeason(String dateString) {
+    static String calculateSeason(String dateString) {
         LocalDate date = LocalDate.parse(dateString);
 
         Month month = date.getMonth();
