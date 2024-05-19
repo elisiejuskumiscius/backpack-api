@@ -26,9 +26,4 @@ Provides an API to retrieve backpack items based on kilometers and date of the h
 5. Run application `gradlew bootRun`
 
 6. Once application started you can go to Swagger UI **http://localhost:8080/swagger-ui/index.html**
-![image](https://github.com/elisiejuskumiscius/backpack-api/assets/58907786/176deb68-d3a8-4ef3-b14e-7e3176205044)
-
-7. After you should be able to do a request. Something similar like this one using some tool like Postman or Insomnia or direcly in browser **http://localhost:8080/backpack?kilometers=75&hikeDate=2024-02-29**
-![image](https://github.com/elisiejuskumiscius/backpack-api/assets/58907786/85de8d14-6fb8-4e18-b3f5-30c702a1671f)
- 
-
+![image](https://github.com/elisiejuskumiscius/backpack-api/assets/58907786/537ae3cc-dc0f-42c7-acef-9d58ea70165d)
