@@ -25,8 +25,7 @@ public class BackpackService {
         ResponseBackpack responseBackpack = new ResponseBackpack();
         try {
             BackpackValidator.validateRequest(kilometers, hikeDate);
-            var season = calculateSeason(hikeDate);
-            var itemsByKilometersAndSeason = backPackRepository.getByKilometersLessThanEqualAndSeasonContaining(kilometers, season);
+            var itemsByKilometersAndSeason = backPackRepository.getByKilometersLessThanEqualAndSeasonContaining(kilometers, calculateSeason(hikeDate));
             var itemsWithoutDuplicates = removeDuplicates(itemsByKilometersAndSeason);
 
             backpack.setItems(mapResponse(itemsWithoutDuplicates));
