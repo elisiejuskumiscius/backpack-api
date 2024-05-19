@@ -3,6 +3,7 @@ package com.example.backpackapi.service;
 import com.example.backpackapi.model.Backpack;
 import com.example.backpackapi.model.Item;
 import com.example.backpackapi.model.BackpackData;
+import com.example.backpackapi.model.ResponseBackpack;
 import com.example.backpackapi.repository.BackPackRepository;
 import com.example.backpackapi.validator.BackpackValidator;
 import jakarta.annotation.Resource;
@@ -19,15 +20,22 @@ public class BackpackService {
     @Resource
     private BackPackRepository backPackRepository;
 
-    public Backpack getBackpack(int kilometers, String hikeDate) {
-        BackpackValidator.validateRequest(kilometers, hikeDate);
-        var season = calculateSeason(hikeDate);
-        var itemsByKilometersAndSeason = backPackRepository.getByKilometersLessThanEqualAndSeasonContaining(kilometers, season);
-        var itemsWithoutDuplicates = removeDuplicates(itemsByKilometersAndSeason);
+    public ResponseBackpack getBackpack(int kilometers, String hikeDate) {
+        Backpack backpack = new Backpack();
+        ResponseBackpack responseBackpack = new ResponseBackpack();
+        try {
+            BackpackValidator.validateRequest(kilometers, hikeDate);
+            var season = calculateSeason(hikeDate);
+            var itemsByKilometersAndSeason = backPackRepository.getByKilometersLessThanEqualAndSeasonContaining(kilometers, season);
+            var itemsWithoutDuplicates = removeDuplicates(itemsByKilometersAndSeason);
 
-        Backpack response = new Backpack();
-        response.setItems(mapResponse(itemsWithoutDuplicates));
-        return response;
+            backpack.setItems(mapResponse(itemsWithoutDuplicates));
+            responseBackpack.setBackpack(backpack);
+            return responseBackpack;
+        } catch (Exception e) {
+            responseBackpack.setErrorMessage(e.getMessage());
+            return responseBackpack;
+        }
     }
 
     static String calculateSeason(String dateString) {
