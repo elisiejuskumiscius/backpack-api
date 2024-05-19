@@ -1,7 +1,5 @@
 package com.example.backpackapi.controller;
 
-import com.example.backpackapi.model.Backpack;
-import com.example.backpackapi.model.BaseResponse;
 import com.example.backpackapi.model.ResponseBackpack;
 import com.example.backpackapi.service.BackpackService;
 import io.swagger.v3.oas.annotations.Operation;
